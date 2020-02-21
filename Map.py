@@ -10,13 +10,13 @@ class Map:
         self.height = height
         self.rows = rows
         self.cols = cols
-        self.music = "Snake\\music.mp3"
+        self.music = "music.mp3"
         if not self.headless:
             pygame.mixer.music.load(self.music)
             pygame.mixer.music.set_volume(0.5)
             pygame.mixer.music.play(-1)
-            self.imgGrass = pygame.image.load("Snake\\ground.png")
-            self.imgStone = pygame.image.load("Snake\\stone.png")
+            self.imgGrass = pygame.image.load("ground.png")
+            self.imgStone = pygame.image.load("stone.png")
             imageSize = (int(width/cols), int(height/rows))
             self.imgGrass = pygame.transform.scale(self.imgGrass, imageSize)
             self.imgStone = pygame.transform.scale(self.imgStone, imageSize)

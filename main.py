@@ -16,7 +16,7 @@ class App:
         self._display_surf = None
         self.size = self.weight, self.height = 800, 800
         if not self.headless:
-            self.fps = 5
+            self.fps = 15
             self.playtime = 0.0
             self.clock = pygame.time.Clock()
             pygame.mixer.init()
