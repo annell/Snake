@@ -10,13 +10,13 @@ class Map:
         self.height = height
         self.rows = rows
         self.cols = cols
-        self.music = "music.mp3"
+        self.music = "Media\\music.mp3"
         if not self.headless:
             pygame.mixer.music.load(self.music)
             pygame.mixer.music.set_volume(0.5)
             pygame.mixer.music.play(-1)
-            self.imgGrass = pygame.image.load("ground.png")
-            self.imgStone = pygame.image.load("stone.png")
+            self.imgGrass = pygame.image.load("Media\\ground.png")
+            self.imgStone = pygame.image.load("Media\\stone.png")
             imageSize = (int(width/cols), int(height/rows))
             self.imgGrass = pygame.transform.scale(self.imgGrass, imageSize)
             self.imgStone = pygame.transform.scale(self.imgStone, imageSize)
@@ -32,6 +32,18 @@ class Map:
         y = self.y0 + height * yMap
         return (x, y, width, height)
     
+    def IsCollision(self, position, snake):
+        x, y = position
+        if x >= self.cols or x < 0:
+            return True
+
+        if y >= self.rows or y < 0:
+            return True
+        
+        if snake.Position().count(position) > 1:
+            return True
+        return False
+    
     def CheckCollision(self, snake, apple):
         snakePositions = snake.Position()
         applePosition = apple.Position()
@@ -42,16 +54,8 @@ class Map:
             while apple.Position() in snake.Position():
                 apple.Place()
             return False
-        headX, headY = snakePositions[0]
-        if headX >= self.cols or headX < 0:
-            return True
-
-        if headY >= self.rows or headY < 0:
-            return True
         
-        if snakePositions.count(snakePositions[0]) > 1:
-            return True
-        return False
+        return self.IsCollision(snakePositions[0], snake)
     
     def GridSize(self):
         return (self.width / self.cols, self.height / self.rows)

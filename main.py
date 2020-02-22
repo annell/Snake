@@ -5,7 +5,7 @@ from Map import Map
 from Snake import Snake
 from Apple import Apple
 from Common import Direction
-from Bot import RandomBot
+from Bot import RandomBot, ClosestRouteBot
  
 class App:
     def __init__(self, headless, bot):
@@ -32,6 +32,10 @@ class App:
         self.map = Map(50, 50, mapSizeX, mapSizeY, cols, rows, self.headless)
         self.snake = Snake(cols/2, rows/2, imageSize, self.headless)
         self.apple = Apple(cols, rows, imageSize, self.headless)
+        if self.bot:
+            self.bot.AddGoal(self.apple)
+            self.bot.AddBody(self.snake)
+            self.bot.AddMap(self.map)
         if not self.headless:
             pygame.display.set_caption("Snake")
             self._display_surf = pygame.display.set_mode(self.size, pygame.DOUBLEBUF)
@@ -39,24 +43,25 @@ class App:
             self.fontEndscore = pygame.font.SysFont('mono', 32, bold=True)
  
     def on_event(self, event):
-        if not self.bot:
-            if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT:
+            self._close = True
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                if not self.bot:
+                    self.snake.SetDirection(Direction.RIGHT)
+            elif event.key == pygame.K_LEFT:
+                if not self.bot:
+                    self.snake.SetDirection(Direction.LEFT)
+            elif event.key == pygame.K_DOWN:
+                if not self.bot:
+                    self.snake.SetDirection(Direction.DOWN)
+            elif event.key == pygame.K_UP:
+                if not self.bot:
+                    self.snake.SetDirection(Direction.UP)
+            elif event.key == pygame.K_ESCAPE:
                 self._close = True
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    self.snake.Direction(Direction.RIGHT)
-                elif event.key == pygame.K_LEFT:
-                    self.snake.Direction(Direction.LEFT)
-                elif event.key == pygame.K_DOWN:
-                    self.snake.Direction(Direction.DOWN)
-                elif event.key == pygame.K_UP:
-                    self.snake.Direction(Direction.UP)
-                elif event.key == pygame.K_ESCAPE:
-                    self._close = True
-                elif event.key == pygame.K_r:
-                    self.on_init()
-        else:
-            self.snake.Direction(event)
+            elif event.key == pygame.K_r:
+                self.on_init()
 
     def on_render(self):
         if not self.headless:
@@ -87,13 +92,12 @@ class App:
         
         while( not self._close ):
             if not self.headless:
-                if self.bot:
-                    self.on_event(self.bot.Move())
-                else:
-                    for event in pygame.event.get():
-                        self.on_event(event)
-            else:
-                self.on_event(self.bot.Move())
+                for event in pygame.event.get():
+                    self.on_event(event)
+
+            if self.bot:
+                self.snake.SetDirection(self.bot.Move())
+
             if self._running:
                 self.snake.Move()
                 if self.map.CheckCollision(self.snake, self.apple):
@@ -105,7 +109,6 @@ class App:
                 text = self.fontEndscore.render("Game over! Score: {}".format(len(self.snake.Position())), True, (0, 0, 0))
                 text_rect = text.get_rect(center=(self.weight/2, self.height/2))
                 self._display_surf.blit(text, text_rect)
-                self.bot = None
             else:
                 print("Game over! Score: {}".format(len(self.snake.Position())))
                 self._close = True
@@ -135,7 +138,7 @@ def main(argv):
         elif opt in ("-g", "--gui-off"):
             headless = True
         elif opt in ("-b", "--bot-type"):
-            bot = RandomBot()
+            bot = ClosestRouteBot()
     theApp = App(headless, bot)
     theApp.on_execute()
 
