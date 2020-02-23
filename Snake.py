@@ -48,6 +48,15 @@ class Snake:
     def Position(self):
         return self.positions
     
+    def Eat(self, apple):
+        applePosition = apple.Position()
+
+        if (self.x, self.y) == applePosition:
+            self.Food()
+            apple.Place()
+            while apple.Position() in self.Position():
+                apple.Place()
+    
     def Draw(self, surface, map):
         if self.headless:
             return

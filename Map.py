@@ -36,26 +36,11 @@ class Map:
         x, y = position
         if x >= self.cols or x < 0:
             return True
-
         if y >= self.rows or y < 0:
             return True
-        
         if snake.Position().count(position) > 1:
             return True
         return False
-    
-    def CheckCollision(self, snake, apple):
-        snakePositions = snake.Position()
-        applePosition = apple.Position()
-
-        if snakePositions[0] == applePosition:
-            snake.Food()
-            apple.Place()
-            while apple.Position() in snake.Position():
-                apple.Place()
-            return False
-        
-        return self.IsCollision(snakePositions[0], snake)
     
     def GridSize(self):
         return (self.width / self.cols, self.height / self.rows)

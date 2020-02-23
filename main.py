@@ -100,7 +100,8 @@ class App:
 
             if self._running:
                 self.snake.Move()
-                if self.map.CheckCollision(self.snake, self.apple):
+                self.snake.Eat(self.apple)
+                if self.map.IsCollision((self.snake.x, self.snake.y) ,self.snake):
                     self._running = False
                 else:
                     self.on_render()
