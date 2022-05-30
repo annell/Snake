@@ -7,8 +7,8 @@ class Apple:
         self.maxX = maxX - 1
         self.maxY = maxY - 1
         if not self.headless:
-            self.img = pygame.image.load('Media\\apple.png')
-            self.sound = "Media\\applespawn.wav"
+            self.img = pygame.image.load('apple.png')
+            self.sound = "applespawn.wav"
             self.img = pygame.transform.scale(self.img, imageSize)
         self.Place()
     

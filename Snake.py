@@ -13,9 +13,9 @@ class Snake:
         self.angleTail = 0
         self.gotFood = True
         if not self.headless:
-            self.head = pygame.image.load("Media\\snakehead.png")
+            self.head = pygame.image.load("snakehead.png")
             self.head = pygame.transform.scale(self.head, imageSize)
-            self.tail = pygame.image.load("Media\\snaketail.png")
+            self.tail = pygame.image.load("snaketail.png")
             self.tail = pygame.transform.scale(self.tail, imageSize)
     
     def SetDirection(self, direction):
